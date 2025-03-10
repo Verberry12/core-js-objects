@@ -36,7 +36,22 @@ function shallowCopy(obj) {
  */
 function mergeObjects(objects) {
   const resultObject = {};
-  Object.assign(resultObject, objects);
+
+  for (let i = 0; i < objects.length; i += 1) {
+    const oneObject = objects[i];
+    const oneObjectArr = Object.entries(oneObject);
+
+    for (let j = 0; j < oneObjectArr.length; j += 1) {
+      const [key, value] = oneObjectArr[j];
+
+      if (key in resultObject) {
+        resultObject[key] += value;
+      } else {
+        resultObject[key] = value;
+      }
+    }
+  }
+
   return resultObject;
 }
 
