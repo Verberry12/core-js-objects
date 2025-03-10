@@ -156,19 +156,53 @@ function makeWord(/* lettersObject */) {
 /**
  * There is a queue for tickets to a popular movie.
  * The ticket seller sells one ticket at a time strictly in order and give the change.
- * The ticket costs 25. Customers pay with bills of 25, 50, or 100.
+ * The ticket costs 25. Customers pay with cashbox of 25, 50, or 100.
  * Initially the seller has no money for change.
  * Return true if the seller can sell tickets, false otherwise
  *
- * @param {number[]} queue - The array representing the bills each customer pays with
+ * @param {number[]} queue - The array representing the cashbox each customer pays with
  * @return {boolean} - True if the seller can sell tickets to everyone, false otherwise
  *
  * @example
  *    sellTickets([25, 25, 50]) => true
  *    sellTickets([25, 100]) => false (The seller does not have enough money to give change.)
  */
-function sellTickets(/* queue */) {
-  throw new Error('Not implemented');
+function sellTickets(queue) {
+  let salesResult = true;
+
+  const cashbox = {
+    25: 0,
+    50: 0,
+    100: 0,
+  };
+
+  for (let i = 0; i < queue.length; i += 1) {
+    if (queue[i] === 25) {
+      cashbox[25] += 1;
+    } else if (queue[i] === 50) {
+      if (cashbox[25] > 0) {
+        cashbox[25] -= 1;
+        cashbox[50] += 1;
+      } else {
+        salesResult = false;
+        break;
+      }
+    } else if (queue[i] === 100) {
+      if (cashbox[50] > 0 && cashbox[25] > 0) {
+        cashbox[25] -= 1;
+        cashbox[50] -= 1;
+        cashbox[100] += 1;
+      } else if (cashbox[25] >= 3) {
+        cashbox[25] -= 3;
+        cashbox[100] += 1;
+      } else {
+        salesResult = false;
+        break;
+      }
+    }
+  }
+
+  return salesResult;
 }
 
 /**
@@ -185,12 +219,9 @@ function sellTickets(/* queue */) {
  *    console.log(r.getArea());   // => 200
  */
 function Rectangle(width, height) {
-  const w = width;
-  const h = height;
-
   const rectangle = {
-    width: w,
-    height: h,
+    width,
+    height,
     getArea: function getAreaFunction() {
       return this.width * this.height;
     },
@@ -255,8 +286,21 @@ function fromJSON(/* proto, json */) {
  *      { country: 'Russia',  city: 'Saint Petersburg' }
  *    ]
  */
-function sortCitiesArray(/* arr */) {
-  throw new Error('Not implemented');
+function sortCitiesArray(arr) {
+  const sortedArr = [];
+
+  for (let i = 0; i < arr.length; i += 1) {
+    const objAsStr = JSON.stringify(arr[i]);
+    sortedArr.push(objAsStr);
+  }
+
+  sortedArr.sort();
+
+  for (let i = 0; i < arr.length; i += 1) {
+    sortedArr[i] = JSON.parse(sortedArr[i]);
+  }
+
+  return sortedArr;
 }
 
 /**
